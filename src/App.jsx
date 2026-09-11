@@ -184,7 +184,6 @@ export default function Budget() {
   const setActual = (id, val) => { setActuals(prev => ({ ...prev, [curKey]: { ...(prev[curKey]||{}), [id]: parseFloat(val)||0 } })); };
   const totalActualsVar = varCategories.reduce((a,c)=>a+(curActuals[c.id]||0),0);
   const totalActualsFixed = fixedExpenses.reduce((a,e)=>a+(curActuals[e.id]!==undefined ? curActuals[e.id] : parseFloat(fixedEdits[e.id])||0),0);
-  const totalActuals = totalActualsVar + totalActualsFixed;
 
   // cash flow - salary arrives in NEXT month
   const salaryMonthIdx    = cfMonth;
@@ -385,7 +384,6 @@ export default function Budget() {
                   </div>
                   {items.map(e=>{
                     const d=fixedDates[e.id]||FIXED_DEFAULTS[e.id]||{day:1,month:"next"};
-                    const isCustom = e.id.startsWith("custom_");
                     return(
                       <div key={e.id} style={{display:"grid",gridTemplateColumns:"1fr 130px 52px 110px 40px",gap:8,alignItems:"center",padding:"7px 0",borderBottom:`1px solid ${C.border}`}}>
                         <span style={{fontSize:14,color:C.text}}>{e.label}</span>
@@ -1000,21 +998,6 @@ function StatCard({label,value,color,bg,dim}) {
   );
 }
 
-function SavingsCard({label,current,target,monthly,color,bg}) {
-  const pct = target ? Math.min((current/target)*100, 100) : null;
-  return(
-    <div style={{background:bg,border:`1px solid ${C.border}`,borderRadius:12,padding:"18px 22px",boxShadow:"0 1px 6px rgba(147,51,234,0.07)"}}>
-      <div style={{fontSize:11,letterSpacing:"0.12em",color:C.textSoft,textTransform:"uppercase",marginBottom:8}}>{label}</div>
-      <div style={{fontSize:20,fontWeight:"bold",color,letterSpacing:"-0.02em",marginBottom:6}}>R{(current||0).toLocaleString("en-ZA", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-      <div style={{fontSize:11,color:C.textMid}}>+R{monthly.toLocaleString("en-ZA")}/month {target ? `• Target: R${target.toLocaleString("en-ZA")}` : ''}</div>
-      {target && pct !== null && (
-        <div style={{marginTop:8,height:4,background:"rgba(0,0,0,0.1)",borderRadius:2}}>
-          <div style={{height:"100%",width:`${pct}%`,background:color,borderRadius:2,transition:"width 0.3s ease"}}/>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function catGrad(cat) {
   const m={Housing:"linear-gradient(90deg,#f472b6,#e8589a)",Insurance:"linear-gradient(90deg,#c084fc,#a855f7)",Wellness:"linear-gradient(90deg,#f9a8d4,#f472b6)",Home:"linear-gradient(90deg,#d8b4fe,#c084fc)",Subscriptions:"linear-gradient(90deg,#e879f9,#c026d3)",Banking:"linear-gradient(90deg,#c4b5fd,#a78bfa)",Savings:"linear-gradient(90deg,#86efac,#4ade80)",Tax:"linear-gradient(90deg,#f9a8d4,#ec4899)"};
